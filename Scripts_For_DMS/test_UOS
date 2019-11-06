@@ -1,0 +1,179 @@
+//test_UOS
+
+//let timerId = setTimeout(sayHi, 1000);
+
+
+var nodeRootFolder = companyhome.childByNamePath("User Homes")
+
+for each (var f in nodeRootFolder.getChildren().sort((a, b) => b.properties["cm:name"] - a.properties["cm:name"])){		
+	
+	var name = f.properties["cm:name"];		
+	var ownerName = f.properties["cm:title"];
+
+	
+	//if(f.name.indexOf("UOS")>-1){
+		
+		//if(f.properties["cm:modified"].getDate() == "5" )
+		logger.log(f.properties["cm:name"]);//+"  \t"+f.properties["cm:modified"].getHours()+"  \t"+f.properties["cm:modified"].getMinutes())
+		
+		
+	//}
+}
+
+
+
+
+//function sayHi() {
+  //alert('Привет');
+//	logger.log("hi");
+//}
+
+
+
+/*
+for each(var nodeUser in people.getPeople(null)){
+	u = utils.getNodeFromString(nodeUser);		
+	
+	if(u.properties["cm:userName"].indexOf("UOS",0)<0){
+		////if (u.properties["cm:userName"])
+		//logger.log(u.properties["cm:userName"]);
+	
+		var nameFolder = firstNamePlusInitialsPlusDepartment(u);
+		if (nameFolder){
+
+			var nodeFolder = companyhome.childByNamePath("Shared/"+nameRootFolder+"/"+nameFolder) ;
+		
+			var properties = new Array();
+			properties["cm:title"] = u.properties["cm:userName"];		
+	
+			if (!nodeFolder){
+			
+				//for by folders
+				//for each (var f in nodeRootFolder.getChildren()){	
+				
+				//	if (f.properties["cm:title"].indexOf(u.properties["cm:userName"],0)<0){				//user has other organization
+					
+				//		f.setName(nameFolder);			//rename folder	
+				//		f.save();
+				//		for each (var c in f.getChildren()){				
+				//			c.setInheritsPermissions(false);
+				//			c.setPermission("Coordinator", f.properties["cm:title"]);						
+				//		}
+				//	}
+				//}
+				
+				if (!nodeRootFolder.createNode(nameFolder, "cm:folder", properties)){					//folder not exist
+					status.setCode(status.STATUS_BAD_REQUEST, nameFolder+" is not created");
+					}			
+			}
+		
+			nodeFolder = companyhome.childByNamePath("Shared/"+nameRootFolder+"/"+nameFolder) ;
+			nodeFolder.setInheritsPermissions(true);
+			nodeFolder.setPermission("Contributor", "GROUP_EVERYONE2");
+			nodeFolder.setPermission("Coordinator", u.properties["cm:userName"]);
+		
+		}//if (nameFolder)
+	
+	}
+	
+}//for
+*/
+
+
+//utils.enableRules();
+
+//==================================================================================================
+
+//==================================================================================================
+function moveToUserMyFiles(ownerName, folderSharedName){
+	//move files to --> User Home/<ownerName>/incoming
+	
+	//for each (var c in folderShared.getChildren()){
+		
+		var folderShared = companyhome.childByNamePath(folderSharedName);
+	
+		//var nameFolderFromShare = "LastFilesFromShared";
+	
+		var nodeIncoming = companyhome.childByNamePath("User Homes/"+ ownerName);// +"/"+folderShared);
+		//if (!nodeIncoming)
+		//if (!companyhome.childByNamePath("User Homes/"+ ownerName).createFolder(nameFolderFromShare)){
+		//	status.setCode(status.STATUS_BAD_REQUEST, "folder: "+  ownerName + "/"+nameFolderFromShare +" is not exist");
+		//	//return;
+		//}	
+		//nodeIncoming = companyhome.childByNamePath("User Homes/"+ ownerName +"/"+nameFolderFromShare);			
+		
+		logger.log(folderShared.move(nodeIncoming) +" move to "+"User Homes/"+ ownerName);// +"/"+folderShared);
+	
+		//?? what do, if content with this name already exist ??
+	//}	
+	
+}
+//==================================================================================================
+/*function moveToUserMyFiles(ownerName, folderShared){
+	//move files to --> User Home/<ownerName>/incoming
+	for each (var c in folderShared.getChildren()){
+		
+		var nameFolderFromShare = "LastFilesFromShared";
+	
+		var nodeIncoming = companyhome.childByNamePath("User Homes/"+ ownerName +"/"+nameFolderFromShare);
+		if (!nodeIncoming)
+		if (!companyhome.childByNamePath("User Homes/"+ ownerName).createFolder(nameFolderFromShare)){
+			status.setCode(status.STATUS_BAD_REQUEST, "folder: "+  ownerName + "/"+nameFolderFromShare +" is not exist");
+			//return;
+		}	
+		nodeIncoming = companyhome.childByNamePath("User Homes/"+ ownerName +"/"+nameFolderFromShare);			
+		
+		logger.log(c.move(nodeIncoming) +" move to "+"User Homes/"+ ownerName +"/"+nameFolderFromShare);
+	
+		//?? what do, if content with this name already exist ??
+	}	
+}*/
+//==================================================================================================
+function firstNamePlusInitialsPlusDepartment(nodeUser){
+	
+	var userName = nodeUser.properties["cm:firstName"]+" "+nodeUser.properties["cm:lastName"];
+	if (userName.indexOf("Admin", 0)==-1
+	   	&& userName.indexOf("Guest", 0)==-1
+		&& userName.indexOf("test", 0)==-1
+	   ){
+		var userInitials = "";		
+	   var userInitialsSplitList = nodeUser.properties["cm:lastName"].split(" "); 
+		for (var i=0; i<2; i++){
+			if (userInitialsSplitList[i]) {userInitials += userInitialsSplitList[i].substr(0, 1)+".";}
+		}	   
+		var userName = nodeUser.properties["cm:firstName"]+" "+userInitials;
+		
+		var userOrganization = nodeUser.properties["cm:organization"];	
+		if (userOrganization!=null){			
+			//delete all "
+			userOrganization = userOrganization.replace(new RegExp("\"", 'g'), "");		
+			//take last part of userOrganization = name of viddil
+			var userOrganizationSplitList = userOrganization.split(",");
+			userOrganization = userOrganizationSplitList[userOrganizationSplitList.length-1];				
+			}else
+				userOrganization="-";			
+			var nameFolder = userName
+						  +"-"
+						  +userOrganization;
+		
+		return nameFolder;
+				//logger.log(nameFolder);	 	
+		}
+	else return null;
+}	
+//==================================================================================================
+function userFolderExist(nameFolder){
+	var nodeShared = companyhome.childByNamePath("Shared");
+	var nameRootFolder = nameFolder;//"Кориcтувачі";
+
+	var nodeRootFolder = companyhome.childByNamePath("Shared/"+nameRootFolder);
+	
+	if (!nodeRootFolder) nodeShared.createNode(nameRootFolder, "cm:folder");
+	
+	nodeRootFolder = companyhome.childByNamePath("Shared/"+nameRootFolder);
+	if (!nodeRootFolder) status.setCode(status.STATUS_BAD_REQUEST, "folder: "+ nameRootFolder +" is not exist");	
+	
+	return nodeRootFolder;
+	//logger.log(nodeIncoming); 
+}
+//=================================================================================================
