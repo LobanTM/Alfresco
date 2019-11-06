@@ -1,0 +1,53 @@
+//ListUsersListGroups
+
+//utils.getNodeFromString(people.getPeople(null)[0]).getChildren()
+
+/*for each (var u in people.getPeople(null)){
+	
+	var user = utils.getNodeFromString(u)
+	
+	if (user.properties["cm:organizationId"]==0)
+	logger.log(user.properties["cm:userName"]
+			//+"/"+user.properties["cm:organizationId"]			   
+			  );
+}
+*/
+var i = 1;
+
+
+logger.log("=======================================")
+
+//groups.getGroup("EVERYONE2").getChildGroups()[0].getChildUsers()[0].
+
+for each(var group in groups.getGroup("EVERYONE2").getChildGroups(utils.createPaging(-1, 0), "displayName")){
+	logger.log(group.displayName);
+	
+	for each (var u in group.getChildUsers()){	
+		if(u.person.properties["cm:location"]){
+			logger.log("\t("+i+")"+u.fullName+" / "+u.person.properties["cm:jobtitle"]);	
+			i++;
+		}
+	}
+	
+	if(group)
+	for each(var subGroup in group.getChildGroups(utils.createPaging(-1, 0), "displayName")){
+		logger.log("\t"+"\t"+subGroup.displayName);
+		for each (var uSubGroup in subGroup.getChildUsers()){	
+			if(uSubGroup.person.properties["cm:location"]){
+				logger.log("\t"+"\t"+"\t("+i+")"+uSubGroup.fullName+" / "+uSubGroup.person.properties["cm:jobtitle"]);	
+				i++;
+			}
+		}
+		for each(var subSubGroup in subGroup.getChildGroups(utils.createPaging(-1, 0), "displayName")){
+			logger.log("\t"+"\t"+"\t"+subSubGroup.displayName);
+			
+			for each (var uSubGroup in subSubGroup.getChildUsers()){		
+				if(uSubGroup.person.properties["cm:location"]){
+				logger.log("\t"+"\t"+"\t"+"\t("+i+")"+uSubGroup.fullName+" / "+uSubGroup.person.properties["cm:jobtitle"]);	
+				i++;
+				}
+			}
+	
+		}
+	}
+}

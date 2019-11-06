@@ -1,0 +1,29 @@
+//123testJavaScript
+
+var nodes = search.luceneSearch('@name:123');
+
+for each(var node in nodes) {
+    logger.log(node.name + ' 	(' + node.typeShort + '): 	' + node.nodeRef);
+}
+//===============================================================================
+
+
+
+//===============================================================================
+// log the docs that currently contain the word 'Alfresco' to a log file
+var logFile = space.childByNamePath("alf docs.txt");
+if (logFile == null){
+   logFile = space.createFile("alf docs.txt");
+	}
+if (logFile != null){
+   // execute a lucene search across the repo for the text 'alfresco'
+   var docs = search.luceneSearch("TEXT:alfresco");
+   var log = "";
+   for (var i=0; i<docs.length; i++)   {
+      log += "Name: " + docs[i].name + "\tPath: " + docs[i].displayPath + "\r\n";
+   		}
+   logFile.content += log;
+	}
+	
+//===============================================================================
+

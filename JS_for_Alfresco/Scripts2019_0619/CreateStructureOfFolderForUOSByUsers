@@ -1,0 +1,71 @@
+//CreateStructureOfFolderForUOSByUsers
+
+var groupEveryoneName = "EVERYONE2";
+
+
+var node = companyhome.childByNamePath("Shared");
+var nameIncoming = "кориcтувачі";
+
+//if (node.exists()){	
+	if (!companyhome.childByNamePath("Shared/"+nameIncoming)){
+		 node.createNode(nameIncoming, "cm:folder");
+	}		
+
+var nodeIncoming = companyhome.childByNamePath("Shared/"+nameIncoming);
+	if (!nodeIncoming){
+		status.setCode(status.STATUS_BAD_REQUEST, "folder: "+ nameIncoming +" is not exist");
+		//return;
+	}	
+//logger.log(nodeIncoming); 
+//==========================================================================================================
+var usersList = people.getPeople(null);
+
+for each(var node in usersList){
+	user = utils.getNodeFromString(node);	
+	
+	var userName = user.properties["cm:firstName"]+" "+user.properties["cm:lastName"];
+	if (userName.indexOf("Administrator", 0)==-1
+	   	&& userName.indexOf("Guest", 0)==-1
+		&& userName.indexOf("test", 0)==-1
+	   ){
+		var userInitials = "";		
+	   var userInitialsSplitList = user.properties["cm:lastName"].split(" "); 
+		for (var i=0; i<2; i++){
+			if (userInitialsSplitList[i]) {userInitials += userInitialsSplitList[i].substr(0, 1)+".";}
+		}	   
+		var userName = user.properties["cm:firstName"]+" "+userInitials;
+		
+		var userOrganization = user.properties["cm:organization"];	
+		if (userOrganization!=null){			
+			//delete all "
+			userOrganization = userOrganization.replace(new RegExp("\"", 'g'), "");		
+			//take last part of userOrganization = name of viddil
+			var userOrganizationSplitList = userOrganization.split(",");
+			userOrganization = userOrganizationSplitList[userOrganizationSplitList.length-1];				
+			}else
+				userOrganization="-";			
+			var nameFolder = userName
+						  +" "
+						  +userOrganization;	
+				logger.log(nameFolder);	 
+				//create folder
+	
+			var nodeDep = companyhome.childByNamePath("Shared/"+nameIncoming+"/"+nameFolder) ;
+			if (!nodeDep){ 
+				if (!nodeIncoming.createFolder(nameFolder)){
+					status.setCode(status.STATUS_BAD_REQUEST, nameFolder+"is not created");
+				}
+		 	} 
+			nodeDep = companyhome.childByNamePath("Shared/"+nameIncoming+"/"+nameFolder) ; 
+			//logger.log(nodeDep); 
+			nodeDep.setInheritsPermissions(false);
+			nodeDep.setPermission("Contributor", "GROUP_"+groupEveryoneName);
+			nodeDep.setPermission("Coordinator", user.properties["cm:userName"]);	
+		
+		//join rule to folder
+		
+		
+		
+	}//if	
+	
+}//for

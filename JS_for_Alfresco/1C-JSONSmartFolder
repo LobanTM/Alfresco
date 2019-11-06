@@ -1,0 +1,123 @@
+//1C-JSONSmartFolder
+
+var smartFolderList = [{name:"Вхідні документи", 	
+					 	child:[ {location:1, //User Homes
+								id:"100",
+					 			name:"Документи 1С", 
+								description:"документи відкритих сайтів",
+								nameSite:"admin1C",
+								nameFolder:"%CURRENT_USER%" 
+						   		},{
+								location:2, //Shared Files 
+								id:"200",
+					 			name:"Incoming", 
+								description:"документи відкритих сайтів",
+								nameSite:"кориcтувачі",
+								nameFolder:"%CURRENT_USER%" 	
+								},{
+								location:3, //Sites 
+								id:"300",
+					 			name:"Інформаційний сайт", 
+								description:"документи відкритих сайтів",
+								nameSite:"info-site",
+								nameFolder:"*" 	
+								},{
+								location:3, //Sites 
+								id:"301",
+					 			name:"Фін Деп", 
+								description:"документи відкритих сайтів",
+								nameSite:"fin-dep",
+								nameFolder:"*" 	
+								}		
+						 	  ]
+					    }			    
+			   		 ]
+
+
+//=========================================================
+var namePathSmartFolderTemplates = "1CsmartFolder.json";		//name of file
+
+var nodeShared = companyhome.childByNamePath("Data Dictionary/Smart Folder Templates");
+
+
+var nodeSmartFolder = nodeShared.childByNamePath(namePathSmartFolderTemplates);
+											
+if (nodeSmartFolder == null){
+  	 nodeSmartFolder = nodeShared.createFile(namePathSmartFolderTemplates);
+	}
+if (nodeSmartFolder != null){   	
+	
+   //=======================================
+   	var log = JSONFormat(smartFolderList);   
+	
+   	nodeSmartFolder.content = log;
+	
+	logger.log(log);
+	
+	
+}else 
+	logger.log(namePathSmartFolderTemplates + " does not exist");
+
+	
+//===============================================================================
+
+
+function JSONFormat(list){
+	
+	for each (var node in list){
+	
+		var text = //node.name;
+			"{"
+			+"\n\"name\" : \""+node.name+"\","
+			+"\n\"nodes\" : [";	
+		
+		var i = 0;
+		for each (var childNode in node.child){	
+			if (i>0) text += ",";i++;
+			text +=folderNode(childNode.location, childNode.id, childNode.name,childNode.description,childNode.nameSite, childNode.nameFolder);			
+		}			
+		text += "\n	]";
+		text += "\n}";
+		
+	}	
+	return text;
+}
+
+function folderNode(location, numberNode, nameNode, description,nameSite, nameFolder){	
+
+	//var locationF = location;//.toLocaleLowerCase().replace(new RegExp(" ", 'g'), "_");;	
+	
+	var str =  "{"
+			+"\n	\"id\" : \""+numberNode+"\","
+			+"\n	\"name\" : \""+nameNode+"\","
+			+"\n	\"description\" : \""+description+"\","
+			+"\n	\"search\" : {\"language\" : \"fts-alfresco\","
+			+"\n		\"query\" : \"(PATH:\'/app:company_home/"
+			;
+	
+	switch(location) {
+ 		 case 1:  // User Homes
+   		 	str += "app:user_homes/cm:"+nameSite+"/cm:"+nameFolder+"/*\') \"";
+   		 	break;
+  		 case 2:  // Shared Files			
+   		 	str += "app:shared/cm:"+nameSite+"/*\')"+" AND =cm:title:%CURRENT_USER%"+" \"";				
+   		 	break;
+		 case 3:  // Sites 
+			var nameFolderF = "*";
+			if (companyhome.childByNamePath("Sites/"+nameSite+"/documentLibrary/"+nameFolder))
+				nameFolderF = "/cm:"+nameFolder;
+			else nameFolderF = "";
+   		 	str += "st:sites/cm:"+nameSite+"/cm:documentLibrary"+nameFolderF+"/*\') \"";
+   			break;
+
+		}
+	
+	str += "\n		}"
+			+"\n	}"
+	
+
+	return 	str;
+
+}
+
+

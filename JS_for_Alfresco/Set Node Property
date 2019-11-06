@@ -1,0 +1,13 @@
+setProperty();
+
+function setProperty() {
+
+	var node = search.findNode("workspace://version2Store/41a8d4b8-dcb1-48cf-adc1-a36174244490")
+	
+	logger.log("Version comment: " + node.properties['ver2:versionDescription']);
+	
+//	node.properties['ver2:versionDescription'] = 'Зауваження Щибрі О.Б.';
+//	node.save();
+	
+//	logger.log("New Version comment: " + node.properties['ver2:versionDescription']);
+}

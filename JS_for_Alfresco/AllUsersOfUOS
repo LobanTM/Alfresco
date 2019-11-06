@@ -1,0 +1,37 @@
+//AllUsersOfUOS
+
+var nameRootFolder = "кориcтувачі"
+var nodeRootFolder = userFolderExist(nameRootFolder);
+
+utils.disableRules();
+
+///nodeRootFolder.getChildren()[0].getType() .setName(name)
+
+//for by folders			
+for each (var f in nodeRootFolder.getChildren()){		
+
+	//logger.log(f.name)
+	
+}
+
+for each(var nodeUser in people.getPeople(null)){
+	u = utils.getNodeFromString(nodeUser);
+	
+	logger.log(u.properties["cm:userName"])
+}
+//==================================================================================================
+function userFolderExist(nameFolder){
+	var nodeShared = companyhome.childByNamePath("Shared");
+	var nameRootFolder = nameFolder;//"кориcтувачі";
+
+	var nodeRootFolder = companyhome.childByNamePath("Shared/"+nameRootFolder);
+	
+	if (!nodeRootFolder) nodeShared.createNode(nameRootFolder, "cm:folder");
+	
+	nodeRootFolder = companyhome.childByNamePath("Shared/"+nameRootFolder);
+	if (!nodeRootFolder) status.setCode(status.STATUS_BAD_REQUEST, "folder: "+ nameRootFolder +" is not exist");	
+	
+	return nodeRootFolder;
+	//logger.log(nodeIncoming); 
+}
+//=================================================================================================

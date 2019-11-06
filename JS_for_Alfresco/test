@@ -1,0 +1,37 @@
+//test
+
+
+
+
+//всі користувачі
+var count = 0;
+
+for each (var u in people.getPeople(null)){	
+	var user = utils.getNodeFromString(u);
+	
+	
+	if(user.properties["cm:organizationId"]){
+		count++;
+		//logger.log("("+count+")  "+user.properties["cm:firstName"]);
+		
+	}
+
+}
+
+//30000 - начальники комерційних стуктурних підрозділів
+//40000 - начальники комерційних департаментів
+//50000 - начальники департаментів.
+//60000 - начальники стуктурних підрозділів
+
+var list =  ["50000","40000","60000","30000"]
+
+for each (var l in list){
+
+	
+	//logger.log(l)
+	logger.log("========   "+groups.getGroup("GROUP_"+l).displayName+"  =======");
+	for each(var group in groups.getGroup("GROUP_"+l).getChildGroups(utils.createPaging(-1, 0), "displayName")){
+		logger.log("\t"+group.displayName);
+	}
+	
+}

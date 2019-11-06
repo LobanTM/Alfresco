@@ -1,0 +1,18 @@
+//searchFileByPproperty
+
+
+//var node = companyhome.childByNamePath("Sites/111111/documentLibrary/20.tiff");
+
+//var transformedNode = node.transformDocument("text/html");
+
+
+
+var nodes = search.luceneSearch('@creator:fedorov.sp');
+
+for each(var node in nodes) {
+    logger.log(node.displayPath + ' \t(' + node.name + '): \t');// + node.nodeRef);
+	
+}
+
+//logger.log(node.displayPath);
+

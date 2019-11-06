@@ -1,0 +1,32 @@
+//SendMailToFromShared
+
+// create mail action   
+	var mail = actions.create("mail");   
+	mail.parameters.to = "loban.tm@uos.ua";   
+	mail.parameters.subject = "Hello from JavaScript";   
+	mail.parameters.from = "loban.tm@uos.ua";   
+
+	var template = companyhome.childByNamePath("Data Dictionary/Email Templates/Notify Email Templates/notify_user_email_uk.html.ftl");
+
+	//logger.log(template);	
+
+	mail.parameters.template = template; 
+
+
+	mail.parameters.text = "текст, если шаблон не найден";  
+
+
+	var nodeShared = companyhome.childByNamePath("Shared");
+	
+	//logger.log(nodeShared);
+	
+	// execute action against a document       
+//----//	mail.execute(nodeShared); 
+    
+	//logger.log(mail.getName());
+
+/*
+var uuidNode = "workspace://SpacesStore/d37780f6-d819-4c7f-987f-ee0ef5fd57c8";
+
+logger.log(search.findNode(uuidNode));
+*/  

@@ -1,0 +1,42 @@
+//testUpdateFoldersSharedFiles
+
+
+var nameRootFolder = "кориcтувачі"
+var nodeRootFolder = userFolderExist(nameRootFolder);
+
+utils.disableRules();
+
+	var nameTestFolder = "Жураковська М.В.-Департамент кадрів та документообігу"
+	//var nodeTestFolder = companyhome.childByNamePath("User Homes/"+nameTestFolder);
+	var properties = new Array();
+	properties["cm:title"] = "jurakovska.mv";	
+
+	if (!nodeRootFolder.createNode(nameTestFolder, "cm:folder", properties)){					//folder not exist
+		status.setCode(status.STATUS_BAD_REQUEST, nameTestFolder+" is not created");
+		}
+	//var nodeTestFolder = companyhome.childByNamePath(nodeRootFolder.name+"/"+nameTestFolder);
+	//logger.log(nodeTestFolder.name)
+	
+
+	//nodeTestFolder.setName(nodeTestFolder.properties["cm:name"].substr(1));	//rename folder	
+	//nodeTestFolder.save();
+	//logger.log(nodeTestFolder.name)
+	//logger.log("move "+nodeTestFolder.name+" -to-> "+nodeRootFolder.name+" = "+nodeTestFolder.move(nodeRootFolder))
+
+utils.enableRules();
+
+//==================================================================================================
+function userFolderExist(nameFolder){
+	var nodeShared = companyhome.childByNamePath("Shared");
+	var nameRootFolder = nameFolder;//"кориcтувачі";
+
+	var nodeRootFolder = companyhome.childByNamePath("Shared/"+nameRootFolder);
+	
+	if (!nodeRootFolder) nodeShared.createNode(nameRootFolder, "cm:folder");
+	
+	nodeRootFolder = companyhome.childByNamePath("Shared/"+nameRootFolder);
+	if (!nodeRootFolder) status.setCode(status.STATUS_BAD_REQUEST, "folder: "+ nameRootFolder +" is not exist");	
+	
+	return nodeRootFolder;
+	//logger.log(nodeIncoming); 
+}

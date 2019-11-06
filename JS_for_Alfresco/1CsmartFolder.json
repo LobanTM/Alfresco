@@ -1,0 +1,33 @@
+{
+"name" : "Вхідні документи",
+"nodes" : [{
+	"id" : "100",
+	"name" : "Документи 1С",
+	"description" : "документи відкритих сайтів",
+	"search" : {"language" : "fts-alfresco",
+		"query" : "(PATH:'/app:company_home/app:user_homes/cm:admin1C/cm:%CURRENT_USER%/*') "
+		}
+	},{
+	"id" : "200",
+	"name" : "Мої спільні файли",
+	"description" : "документи відкритих сайтів",
+	"search" : {"language" : "fts-alfresco",
+		"query" : "(PATH:'/app:company_home/app:shared/cm:кориcтувачі/*') AND =cm:title:%CURRENT_USER% "
+		}
+	},{
+	"id" : "210",
+	"name" : "Мої сайти",
+	"description" : "документи відкритих сайтів",
+	"search" : {"language" : "fts-alfresco",
+		"query" : "(PATH:'/app:company_home/st:sites/*')"
+		}
+	},{
+	"id" : "300",
+	"name" : "Інформаційний сайт",
+	"description" : "документи відкритих сайтів",
+	"search" : {"language" : "fts-alfresco",
+		"query" : "(PATH:'/app:company_home/st:sites/cm:info-site/cm:documentLibrary/*') "
+		}
+	}
+	]
+}

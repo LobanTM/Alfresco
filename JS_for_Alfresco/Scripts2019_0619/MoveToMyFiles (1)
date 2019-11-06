@@ -1,0 +1,17 @@
+//MoveToMyFiles
+
+
+var nodeDoc = companyhome.childByNamePath("Shared/кориcтувачі/123321/444.docx");
+
+//logger.log(nodeDoc.getType());
+
+var nodeIncoming = companyhome.childByNamePath("User Homes/loban.tm/incoming");
+
+	if (!nodeIncoming)
+	if (!companyhome.childByNamePath("User Homes/loban.tm").createFolder("incoming")){
+		status.setCode(status.STATUS_BAD_REQUEST, "folder: "+ "loban.tm/incoming" +" is not exist");
+		//return;
+	}	
+
+logger.log(nodeDoc.move(nodeIncoming));
+

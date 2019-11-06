@@ -1,0 +1,24 @@
+//testForDocument
+
+var nodeRootFolder = companyhome.childByNamePath("User Homes/dmsadmin1");
+	//logger.log(nodeRootFolder); 
+
+
+//nodeRootFolder.getChildren()[0].getIsLinkToContainer() .getIsLinkToDocument()
+for each (var f in nodeRootFolder.getChildren()){		
+	
+	
+	
+	if (f.getIsLinkToContainer()){
+		var name = f.properties["cm:name"];				
+
+		logger.log(name)
+		
+		for each (var p in f.properties){
+			if(p.name)
+			logger.log(p.name +"  "+ p)
+		}
+		
+		logger.log(p.type)//.properties["cm:type"])
+	}
+}
